@@ -4,7 +4,13 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "docker:up": "docker-compose up -d --build",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "schema:create": "pnpm --filter @home-inventory/api schema:create",
+    "schema:update": "pnpm --filter @home-inventory/api schema:update",
+    "schema:drop": "pnpm --filter @home-inventory/api schema:drop"
   },
   "devDependencies": {
     "turbo": "^2"
