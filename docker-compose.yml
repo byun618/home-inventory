@@ -10,6 +10,11 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
     volumes:
       - ~/.db/home-inventory/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_PASSWORD}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   api:
     build:
@@ -30,7 +35,7 @@ services:
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
     depends_on:
       mysql:
-        condition: service_started
+        condition: service_healthy
 
   web:
     build:
