@@ -1,3 +1,8 @@
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+config({ path: resolve(__dirname, '../../../.env') });
+
 import { defineConfig } from '@mikro-orm/mysql';
 
 const mikroOrmConfig = defineConfig({
