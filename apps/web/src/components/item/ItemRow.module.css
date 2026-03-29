@@ -1,0 +1,80 @@
+.wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.deleteAction {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--danger);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  transition: transform 0.15s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.row:active {
+  background: var(--bg-section);
+}
+
+.inactive {
+  opacity: 1;
+}
+
+.inactive .name,
+.inactive .location {
+  color: var(--text-disabled);
+}
+
+.emoji {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  background: var(--bg-section);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.emojiInactive {
+  background: var(--border);
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.location {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
