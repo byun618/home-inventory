@@ -20,6 +20,8 @@ FROM base AS builder
 COPY --from=installer /app/ .
 COPY --from=pruner /app/out/full/ .
 ARG APP
+ARG API_INTERNAL_URL=http://localhost:3001
+ENV API_INTERNAL_URL=${API_INTERNAL_URL}
 RUN turbo run build --filter=@home-inventory/${APP}
 
 # --- runner ---

@@ -42,11 +42,10 @@ services:
       context: .
       args:
         APP: web
+        API_INTERNAL_URL: http://api:3001
     container_name: home-inventory-web
     restart: unless-stopped
     ports:
       - '3000:3000'
-    environment:
-      API_INTERNAL_URL: http://api:3001
     depends_on:
       - api
