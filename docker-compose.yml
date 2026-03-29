@@ -14,7 +14,8 @@ services:
   api:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
+      args:
+        APP: api
     container_name: home-inventory-api
     restart: unless-stopped
     ports:
@@ -34,7 +35,8 @@ services:
   web:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
+      args:
+        APP: web
     container_name: home-inventory-web
     restart: unless-stopped
     ports:
