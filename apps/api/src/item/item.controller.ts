@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { CreateItemDto } from './dto/create-item.dto';
+import { UpdateItemDto } from './dto/update-item.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { User } from '../common/entities';
@@ -33,7 +34,7 @@ export class ItemController {
   async findAll(
     @CurrentUser() user: User,
     @Query('space') space?: string,
-    @Query('active') active?: string,
+    @Query('needToBuy') needToBuy?: string,
   ) {
     const household = await this.householdService.findHouseholdByUser(user);
     if (!household) throw new NotFoundException('Household 없음');
@@ -41,7 +42,7 @@ export class ItemController {
     return this.itemService.findAll({
       household,
       space,
-      active: active !== undefined ? active === 'true' : undefined,
+      needToBuy: needToBuy === 'true',
     });
   }
 
@@ -65,23 +66,28 @@ export class ItemController {
     return item;
   }
 
-  @Patch(':id/toggle')
-  async toggle(@CurrentUser() user: User, @Param('id') id: string) {
+  @Patch(':id')
+  async update(
+    @CurrentUser() user: User,
+    @Param('id') id: string,
+    @Body() dto: UpdateItemDto,
+  ) {
     const household = await this.householdService.findHouseholdByUser(user);
     if (!household) throw new NotFoundException('Household 없음');
 
-    const result = await this.itemService.toggle({
+    const item = await this.itemService.update({
       itemId: id,
       household,
+      data: dto,
     });
 
     this.eventService.emitToHousehold(household.id, {
-      event: 'item:toggled',
-      data: result,
+      event: 'item:updated',
+      data: item,
       senderId: user.id,
     });
 
-    return result;
+    return item;
   }
 
   @Delete(':id')

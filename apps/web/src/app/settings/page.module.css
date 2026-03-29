@@ -1,0 +1,80 @@
+.container {
+  padding: 8px 20px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.emptyText {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 40px 0;
+}
+
+.group {
+  margin-bottom: 4px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.expandButton {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.label {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.label:hover {
+  color: var(--accent);
+}
+
+.editInput {
+  flex: 1;
+  font-size: 15px;
+  padding: 4px 8px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  outline: none;
+  font-family: inherit;
+}
+
+.deleteIcon {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  color: var(--text-disabled);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.deleteIcon:hover {
+  color: var(--danger);
+}
+
+.nested {
+  padding-left: 24px;
+  border-left: 1px solid var(--border);
+  margin-left: 12px;
+}

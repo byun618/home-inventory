@@ -40,10 +40,10 @@ export interface Item {
   id: string;
   emoji: string;
   name: string;
+  quantity: number;
   space: string;
   zone: string | null;
   details: string[];
-  active: boolean;
   createdBy: string;
   updatedAt: string;
   createdAt: string;
@@ -52,7 +52,17 @@ export interface Item {
 export interface CreateItemRequest {
   emoji?: string;
   name: string;
+  quantity?: number;
   space: string;
+  zone?: string;
+  details?: string[];
+}
+
+export interface UpdateItemRequest {
+  emoji?: string;
+  name?: string;
+  quantity?: number;
+  space?: string;
   zone?: string;
   details?: string[];
 }
@@ -67,7 +77,7 @@ export interface InviteInfo {
 // --- WebSocket ---
 export type WsEvent =
   | { event: 'item:created'; data: Item }
-  | { event: 'item:toggled'; data: { id: string; active: boolean; updatedAt: string } }
+  | { event: 'item:updated'; data: Item }
   | { event: 'item:deleted'; data: { id: string } }
   | { event: 'member:joined'; data: HouseholdMember }
   | { event: 'member:removed'; data: { userId: string } };

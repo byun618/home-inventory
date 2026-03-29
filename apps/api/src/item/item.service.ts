@@ -10,14 +10,15 @@ export class ItemService {
   async findAll(params: {
     household: Household;
     space?: string;
-    active?: boolean;
+    needToBuy?: boolean;
   }): Promise<ItemType[]> {
     const filter: Record<string, unknown> = { household: params.household };
     if (params.space) filter.space = params.space;
-    if (params.active !== undefined) filter.active = params.active;
+    if (params.needToBuy) filter.quantity = 0;
 
     const items = await this.em.find(Item, filter, {
       orderBy: { createdAt: 'DESC' },
+      populate: ['createdBy'],
     });
 
     return items.map((item) => this.toDto(item));
@@ -28,6 +29,7 @@ export class ItemService {
     user: User;
     emoji?: string;
     name: string;
+    quantity?: number;
     space: string;
     zone?: string;
     details?: string[];
@@ -36,6 +38,7 @@ export class ItemService {
       household: params.household,
       emoji: params.emoji ?? '📦',
       name: params.name,
+      quantity: params.quantity ?? 1,
       space: params.space,
       zone: params.zone ?? null,
       details: params.details ?? [],
@@ -46,27 +49,37 @@ export class ItemService {
     return this.toDto(item);
   }
 
-  async toggle(params: {
+  async update(params: {
     itemId: string;
     household: Household;
-  }): Promise<{ id: string; active: boolean; updatedAt: string }> {
-    const item = await this.em.findOne(Item, {
-      id: params.itemId,
-      household: params.household,
-    });
-    if (!item) {
-      throw new NotFoundException();
-    }
+    data: {
+      emoji?: string;
+      name?: string;
+      quantity?: number;
+      space?: string;
+      zone?: string;
+      details?: string[];
+    };
+  }): Promise<ItemType> {
+    const item = await this.em.findOne(
+      Item,
+      { id: params.itemId, household: params.household },
+      { populate: ['createdBy'] },
+    );
+    if (!item) throw new NotFoundException();
 
-    item.active = !item.active;
+    const { data } = params;
+    if (data.emoji !== undefined) item.emoji = data.emoji;
+    if (data.name !== undefined) item.name = data.name;
+    if (data.quantity !== undefined) item.quantity = data.quantity;
+    if (data.space !== undefined) item.space = data.space;
+    if (data.zone !== undefined) item.zone = data.zone;
+    if (data.details !== undefined) item.details = data.details;
     item.updatedAt = new Date();
+
     await this.em.flush();
 
-    return {
-      id: item.id,
-      active: item.active,
-      updatedAt: item.updatedAt.toISOString(),
-    };
+    return this.toDto(item);
   }
 
   async delete(params: { itemId: string; household: Household }): Promise<void> {
@@ -74,9 +87,7 @@ export class ItemService {
       id: params.itemId,
       household: params.household,
     });
-    if (!item) {
-      throw new NotFoundException();
-    }
+    if (!item) throw new NotFoundException();
 
     await this.em.removeAndFlush(item);
   }
@@ -86,10 +97,10 @@ export class ItemService {
       id: item.id,
       emoji: item.emoji,
       name: item.name,
+      quantity: item.quantity,
       space: item.space,
       zone: item.zone,
       details: item.details,
-      active: item.active,
       createdBy: item.createdBy.id,
       updatedAt: item.updatedAt.toISOString(),
       createdAt: item.createdAt.toISOString(),

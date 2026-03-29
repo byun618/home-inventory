@@ -6,11 +6,11 @@ import styles from './ItemList.module.css';
 
 interface ItemListProps {
   items: Item[];
-  onToggle: (id: string) => void;
+  onTap: (item: Item) => void;
   onDelete: (id: string) => void;
 }
 
-export function ItemList({ items, onToggle, onDelete }: ItemListProps) {
+export function ItemList({ items, onTap, onDelete }: ItemListProps) {
   if (items.length === 0) {
     return (
       <div className={styles.empty}>
@@ -27,7 +27,7 @@ export function ItemList({ items, onToggle, onDelete }: ItemListProps) {
         <ItemRow
           key={item.id}
           item={item}
-          onToggle={onToggle}
+          onTap={onTap}
           onDelete={onDelete}
         />
       ))}

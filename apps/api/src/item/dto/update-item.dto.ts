@@ -1,20 +1,19 @@
 import {
   IsString,
-  IsNotEmpty,
   IsOptional,
   IsArray,
   IsInt,
   Min,
 } from 'class-validator';
 
-export class CreateItemDto {
+export class UpdateItemDto {
   @IsString()
   @IsOptional()
   emoji?: string;
 
   @IsString()
-  @IsNotEmpty()
-  name!: string;
+  @IsOptional()
+  name?: string;
 
   @IsInt()
   @Min(0)
@@ -22,8 +21,8 @@ export class CreateItemDto {
   quantity?: number;
 
   @IsString()
-  @IsNotEmpty()
-  space!: string;
+  @IsOptional()
+  space?: string;
 
   @IsString()
   @IsOptional()

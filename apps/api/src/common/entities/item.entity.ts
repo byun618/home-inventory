@@ -5,7 +5,7 @@ import { User } from './user.entity';
 
 @Entity()
 export class Item {
-  [OptionalProps]?: 'id' | 'emoji' | 'zone' | 'details' | 'active' | 'updatedAt' | 'createdAt';
+  [OptionalProps]?: 'id' | 'emoji' | 'quantity' | 'zone' | 'details' | 'updatedAt' | 'createdAt';
 
   @PrimaryKey()
   id: string = v4();
@@ -28,8 +28,8 @@ export class Item {
   @Property({ type: 'json', default: '[]' })
   details: string[] = [];
 
-  @Property({ default: true })
-  active: boolean = true;
+  @Property({ default: 1, unsigned: true })
+  quantity: number = 1;
 
   @ManyToOne(() => User)
   createdBy!: User;

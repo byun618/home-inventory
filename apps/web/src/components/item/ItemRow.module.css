@@ -40,8 +40,21 @@
 }
 
 .inactive .name,
-.inactive .location {
+.inactive .location,
+.inactive .quantity {
   color: var(--text-disabled);
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quantity {
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
 }
 
 .emoji {

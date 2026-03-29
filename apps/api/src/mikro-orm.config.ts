@@ -1,6 +1,6 @@
 import { defineConfig } from '@mikro-orm/mysql';
 
-export const mikroOrmConfig = defineConfig({
+const mikroOrmConfig = defineConfig({
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT) || 3306,
   user: process.env.DB_USER || 'root',
@@ -13,3 +13,6 @@ export const mikroOrmConfig = defineConfig({
     disableForeignKeys: false,
   },
 });
+
+export { mikroOrmConfig };
+export default mikroOrmConfig;

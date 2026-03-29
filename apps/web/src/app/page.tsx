@@ -13,6 +13,7 @@ import { ItemFilter } from '@/components/item/ItemFilter';
 import { ItemList } from '@/components/item/ItemList';
 import { DeleteDialog } from '@/components/item/DeleteDialog';
 import { AddItemModal } from '@/components/item/AddItemModal';
+import { EditItemModal } from '@/components/item/EditItemModal';
 
 export default function HomePage() {
   const router = useRouter();
@@ -20,10 +21,11 @@ export default function HomePage() {
 
   const [items, setItems] = useState<Item[]>([]);
   const [spaces, setSpaces] = useState<string[]>([]);
-  const [showInactiveOnly, setShowInactiveOnly] = useState(false);
+  const [showNeedToBuy, setShowNeedToBuy] = useState(false);
   const [activeSpace, setActiveSpace] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState<Item | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Item | null>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -62,17 +64,12 @@ export default function HomePage() {
         setItems((prev) => [data, ...prev]);
       });
 
-      socket.on(
-        'item:toggled',
-        (data: { id: string; active: boolean; _senderId: string }) => {
-          if (data._senderId === user.id) return;
-          setItems((prev) =>
-            prev.map((item) =>
-              item.id === data.id ? { ...item, active: data.active } : item,
-            ),
-          );
-        },
-      );
+      socket.on('item:updated', (data: Item & { _senderId: string }) => {
+        if (data._senderId === user.id) return;
+        setItems((prev) =>
+          prev.map((item) => (item.id === data.id ? data : item)),
+        );
+      });
 
       socket.on('item:deleted', (data: { id: string; _senderId: string }) => {
         if (data._senderId === user.id) return;
@@ -87,21 +84,6 @@ export default function HomePage() {
     }
   }, [user]);
 
-  const handleToggle = async (id: string) => {
-    try {
-      const result = await api.patch<{ id: string; active: boolean }>(
-        `/items/${id}/toggle`,
-      );
-      setItems((prev) =>
-        prev.map((item) =>
-          item.id === result.id ? { ...item, active: result.active } : item,
-        ),
-      );
-    } catch {
-      // ignore
-    }
-  };
-
   const handleDelete = async () => {
     if (!deleteTarget) return;
     try {
@@ -115,7 +97,7 @@ export default function HomePage() {
 
   // Filter items
   const filteredItems = items.filter((item) => {
-    if (showInactiveOnly && item.active) return false;
+    if (showNeedToBuy && item.quantity > 0) return false;
     if (activeSpace && item.space !== activeSpace) return false;
     return true;
   });
@@ -128,8 +110,8 @@ export default function HomePage() {
       <SideDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
       <ItemFilter
-        showInactiveOnly={showInactiveOnly}
-        onToggleSwitch={() => setShowInactiveOnly(!showInactiveOnly)}
+        showInactiveOnly={showNeedToBuy}
+        onToggleSwitch={() => setShowNeedToBuy(!showNeedToBuy)}
         spaces={spaces}
         activeSpace={activeSpace}
         onSpaceSelect={setActiveSpace}
@@ -138,7 +120,7 @@ export default function HomePage() {
       {loaded && (
         <ItemList
           items={filteredItems}
-          onToggle={handleToggle}
+          onTap={setEditTarget}
           onDelete={(id) => {
             const item = items.find((i) => i.id === id);
             if (item) setDeleteTarget(item);
@@ -152,6 +134,17 @@ export default function HomePage() {
         open={addModalOpen}
         onClose={() => setAddModalOpen(false)}
         onCreated={fetchItems}
+      />
+
+      <EditItemModal
+        item={editTarget}
+        onClose={() => setEditTarget(null)}
+        onUpdated={fetchItems}
+        onDelete={(id) => {
+          setEditTarget(null);
+          const item = items.find((i) => i.id === id);
+          if (item) setDeleteTarget(item);
+        }}
       />
 
       {deleteTarget && (

@@ -6,7 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { EntityManager } from '@mikro-orm/mysql';
 import * as bcrypt from 'bcrypt';
-import { User, HouseholdMember } from '../common/entities';
+import { User, Household, HouseholdMember } from '../common/entities';
 import type { AuthResponse, UserProfile } from '@home-inventory/shared-types';
 
 @Injectable()
@@ -31,7 +31,18 @@ export class AuthService {
       email: params.email,
       password: await bcrypt.hash(params.password, 10),
     });
-    await this.em.persistAndFlush(user);
+
+    const household = this.em.create(Household, {
+      createdBy: user,
+    });
+
+    const member = this.em.create(HouseholdMember, {
+      household,
+      user,
+      role: 'admin',
+    });
+
+    await this.em.persistAndFlush([user, household, member]);
 
     const tokens = this.generateTokens(user);
     const profile = await this.buildProfile(user);

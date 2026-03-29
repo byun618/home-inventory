@@ -43,6 +43,12 @@ export function SideDrawer({ open, onClose }: SideDrawerProps) {
           >
             👥 같이 쓰는 사람들
           </button>
+          <button
+            className={styles.menuItem}
+            onClick={() => navigate('/settings')}
+          >
+            ⚙️ 설정
+          </button>
         </div>
 
         <button className={styles.logout} onClick={handleLogout}>

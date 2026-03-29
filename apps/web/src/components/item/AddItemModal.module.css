@@ -114,6 +114,32 @@
   border-color: var(--chip-active-bg);
 }
 
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stepperButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-section);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepperValue {
+  font-size: 18px;
+  font-weight: 600;
+  min-width: 24px;
+  text-align: center;
+}
+
 .chipAdd {
   padding: 6px 14px;
   font-size: 13px;
@@ -139,17 +165,34 @@
   color: var(--danger);
 }
 
+.footer {
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .submitButton {
-  margin: 0 20px 20px;
+  width: 100%;
   padding: 14px;
   font-size: 16px;
   font-weight: 600;
   color: #ffffff;
   background: var(--accent);
   border-radius: 14px;
-  flex-shrink: 0;
 }
 
 .submitButton:disabled {
   opacity: 0.6;
+}
+
+.deleteButton {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--danger);
+  background: none;
+  text-align: center;
 }

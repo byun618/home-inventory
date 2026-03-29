@@ -6,11 +6,11 @@ import styles from './ItemRow.module.css';
 
 interface ItemRowProps {
   item: Item;
-  onToggle: (id: string) => void;
+  onTap: (item: Item) => void;
   onDelete: (id: string) => void;
 }
 
-export function ItemRow({ item, onToggle, onDelete }: ItemRowProps) {
+export function ItemRow({ item, onTap, onDelete }: ItemRowProps) {
   const startX = useRef(0);
   const [offsetX, setOffsetX] = useState(0);
   const [swiping, setSwiping] = useState(false);
@@ -18,6 +18,8 @@ export function ItemRow({ item, onToggle, onDelete }: ItemRowProps) {
   const breadcrumb = [item.space, item.zone, ...item.details]
     .filter(Boolean)
     .join(' > ');
+
+  const inactive = item.quantity === 0;
 
   const handleTouchStart = (e: React.TouchEvent) => {
     startX.current = e.touches[0].clientX;
@@ -42,7 +44,7 @@ export function ItemRow({ item, onToggle, onDelete }: ItemRowProps) {
 
   const handleClick = () => {
     if (!swiping) {
-      onToggle(item.id);
+      onTap(item);
     }
   };
 
@@ -58,7 +60,7 @@ export function ItemRow({ item, onToggle, onDelete }: ItemRowProps) {
         삭제
       </div>
       <div
-        className={`${styles.row} ${!item.active ? styles.inactive : ''}`}
+        className={`${styles.row} ${inactive ? styles.inactive : ''}`}
         style={{ transform: `translateX(${offsetX}px)` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -66,12 +68,15 @@ export function ItemRow({ item, onToggle, onDelete }: ItemRowProps) {
         onClick={handleClick}
       >
         <div
-          className={`${styles.emoji} ${!item.active ? styles.emojiInactive : ''}`}
+          className={`${styles.emoji} ${inactive ? styles.emojiInactive : ''}`}
         >
           {item.emoji}
         </div>
         <div className={styles.info}>
-          <p className={styles.name}>{item.name}</p>
+          <div className={styles.nameRow}>
+            <span className={styles.name}>{item.name}</span>
+            <span className={styles.quantity}>{item.quantity}개</span>
+          </div>
           <p className={styles.location}>{breadcrumb}</p>
         </div>
       </div>
