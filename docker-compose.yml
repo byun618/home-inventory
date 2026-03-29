@@ -6,7 +6,40 @@ services:
     ports:
       - '3306:3306'
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: home_inventory
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
     volumes:
       - ~/.db/home-inventory/mysql:/var/lib/mysql
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: home-inventory-api
+    restart: unless-stopped
+    ports:
+      - '3001:3001'
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+    depends_on:
+      mysql:
+        condition: service_started
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: home-inventory-web
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      API_INTERNAL_URL: http://api:3001
+    depends_on:
+      - api

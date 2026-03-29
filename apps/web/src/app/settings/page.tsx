@@ -99,7 +99,6 @@ export default function SettingsPage() {
     }
   };
 
-  // Use PUT instead of PATCH for renaming
   const handleRenamePut = async (
     level: 'spaces' | 'zones' | 'details',
     oldName: string,
@@ -110,18 +109,10 @@ export default function SettingsPage() {
       setEditingItem(null);
       return;
     }
-    const url = `/locations/${level}/${encodeURIComponent(oldName)}${query || ''}`;
     try {
-      await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}${url}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
-          body: JSON.stringify({ newName: newName.trim() }),
-        },
+      await api.put(
+        `/locations/${level}/${encodeURIComponent(oldName)}${query || ''}`,
+        { newName: newName.trim() },
       );
       await loadSpaces();
     } catch {

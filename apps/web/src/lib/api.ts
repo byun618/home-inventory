@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_BASE = '/api';
 
 async function request<T>(
   path: string,
@@ -73,5 +73,7 @@ export const api = {
     request<T>(path, { method: 'POST', body: body ? JSON.stringify(body) : undefined }),
   patch: <T>(path: string, body?: unknown) =>
     request<T>(path, { method: 'PATCH', body: body ? JSON.stringify(body) : undefined }),
+  put: <T>(path: string, body?: unknown) =>
+    request<T>(path, { method: 'PUT', body: body ? JSON.stringify(body) : undefined }),
   delete: <T>(path: string) => request<T>(path, { method: 'DELETE' }),
 };
