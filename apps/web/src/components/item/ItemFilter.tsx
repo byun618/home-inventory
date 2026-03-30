@@ -3,6 +3,8 @@
 import styles from './ItemFilter.module.css';
 
 interface ItemFilterProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
   showInactiveOnly: boolean;
   onToggleSwitch: () => void;
   spaces: string[];
@@ -11,6 +13,8 @@ interface ItemFilterProps {
 }
 
 export function ItemFilter({
+  searchQuery,
+  onSearchChange,
   showInactiveOnly,
   onToggleSwitch,
   spaces,
@@ -19,6 +23,14 @@ export function ItemFilter({
 }: ItemFilterProps) {
   return (
     <div className={styles.container}>
+      <input
+        className={styles.searchInput}
+        type="text"
+        placeholder="뭐 있더라?"
+        value={searchQuery}
+        onChange={(e) => onSearchChange(e.target.value)}
+      />
+
       <label className={styles.switchRow}>
         <span className={styles.switchLabel}>사야 할 것만 보기</span>
         <input

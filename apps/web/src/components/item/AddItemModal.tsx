@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
+import { EmojiPicker } from '@/components/ui/EmojiPicker';
 import styles from './AddItemModal.module.css';
 
 interface AddItemModalProps {
@@ -50,6 +51,7 @@ export function AddItemModal({ open, onClose, onCreated }: AddItemModalProps) {
     }
     setZone('');
     setDetails([]);
+    setDetailOptions([]);
   }, [space]);
 
   useEffect(() => {
@@ -59,11 +61,11 @@ export function AddItemModal({ open, onClose, onCreated }: AddItemModalProps) {
           `/locations/details?space=${encodeURIComponent(space)}&zone=${encodeURIComponent(zone)}`,
         )
         .then(setDetailOptions)
-        .catch(() => {});
+        .catch(() => setDetailOptions([]));
     } else {
       setDetailOptions([]);
+      setDetails([]);
     }
-    setDetails([]);
   }, [space, zone]);
 
   const reset = () => {
@@ -167,17 +169,7 @@ export function AddItemModal({ open, onClose, onCreated }: AddItemModalProps) {
 
         <div className={styles.content}>
           {/* Emoji */}
-          <button
-            className={styles.emojiPicker}
-            onClick={() => {
-              const emojis = ['📦', '🧴', '🧹', '🍚', '🥚', '🧻', '🧼', '🥛', '☕', '🍜', '🫙', '🧈', '💊', '🪥', '🧽'];
-              const idx = emojis.indexOf(emoji);
-              setEmoji(emojis[(idx + 1) % emojis.length]);
-            }}
-          >
-            <span className={styles.emojiDisplay}>{emoji}</span>
-            <span className={styles.emojiHint}>탭해서 변경</span>
-          </button>
+          <EmojiPicker value={emoji} onChange={setEmoji} />
 
           {/* Name */}
           <input

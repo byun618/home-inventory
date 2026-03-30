@@ -21,6 +21,7 @@ export default function HomePage() {
 
   const [items, setItems] = useState<Item[]>([]);
   const [spaces, setSpaces] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [showNeedToBuy, setShowNeedToBuy] = useState(false);
   const [activeSpace, setActiveSpace] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -97,6 +98,7 @@ export default function HomePage() {
 
   // Filter items
   const filteredItems = items.filter((item) => {
+    if (searchQuery && !item.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (showNeedToBuy && item.quantity > 0) return false;
     if (activeSpace && item.space !== activeSpace) return false;
     return true;
@@ -110,6 +112,8 @@ export default function HomePage() {
       <SideDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
       <ItemFilter
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
         showInactiveOnly={showNeedToBuy}
         onToggleSwitch={() => setShowNeedToBuy(!showNeedToBuy)}
         spaces={spaces}

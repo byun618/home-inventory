@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import type { Item } from '@home-inventory/shared-types';
 import { api } from '@/lib/api';
+import { EmojiPicker } from '@/components/ui/EmojiPicker';
 import styles from './AddItemModal.module.css';
 
 interface EditItemModalProps {
@@ -69,7 +70,7 @@ export function EditItemModal({
           `/locations/details?space=${encodeURIComponent(space)}&zone=${encodeURIComponent(zone)}`,
         )
         .then(setDetailOptions)
-        .catch(() => {});
+        .catch(() => setDetailOptions([]));
     } else {
       setDetailOptions([]);
     }
@@ -159,20 +160,7 @@ export function EditItemModal({
         </div>
 
         <div className={styles.content}>
-          <button
-            className={styles.emojiPicker}
-            onClick={() => {
-              const emojis = [
-                '📦', '🧴', '🧹', '🍚', '🥚', '🧻', '🧼', '🥛', '☕',
-                '🍜', '🫙', '🧈', '💊', '🪥', '🧽',
-              ];
-              const idx = emojis.indexOf(emoji);
-              setEmoji(emojis[(idx + 1) % emojis.length]);
-            }}
-          >
-            <span className={styles.emojiDisplay}>{emoji}</span>
-            <span className={styles.emojiHint}>탭해서 변경</span>
-          </button>
+          <EmojiPicker value={emoji} onChange={setEmoji} />
 
           <input
             className={styles.input}

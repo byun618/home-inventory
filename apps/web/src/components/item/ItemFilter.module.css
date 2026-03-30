@@ -5,6 +5,27 @@
   gap: 12px;
 }
 
+.searchInput {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  background: var(--bg-section);
+  border: none;
+  border-radius: 12px;
+  color: var(--text-primary);
+  outline: none;
+  font-family: inherit;
+}
+
+.searchInput::placeholder {
+  color: var(--text-disabled);
+}
+
+.searchInput:focus {
+  background: var(--bg);
+  border: 1px solid var(--accent);
+}
+
 .switchRow {
   display: flex;
   align-items: center;
