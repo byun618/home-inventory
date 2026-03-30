@@ -31,18 +31,7 @@ export class AuthService {
       email: params.email,
       password: await bcrypt.hash(params.password, 10),
     });
-
-    const household = this.em.create(Household, {
-      createdBy: user,
-    });
-
-    const member = this.em.create(HouseholdMember, {
-      household,
-      user,
-      role: 'admin',
-    });
-
-    await this.em.persistAndFlush([user, household, member]);
+    await this.em.persistAndFlush(user);
 
     const tokens = this.generateTokens(user);
     const profile = await this.buildProfile(user);

@@ -17,7 +17,7 @@ import { EditItemModal } from '@/components/item/EditItemModal';
 
 export default function HomePage() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, refresh } = useAuth();
 
   const [items, setItems] = useState<Item[]>([]);
   const [spaces, setSpaces] = useState<string[]>([]);
@@ -36,6 +36,13 @@ export default function HomePage() {
     }
   }, [authLoading, user, router]);
 
+  // Household이 없으면 자동 생성
+  useEffect(() => {
+    if (user && !user.household) {
+      api.post('/households').then(() => refresh()).catch(() => {});
+    }
+  }, [user, refresh]);
+
   const fetchItems = useCallback(async () => {
     try {
       const data = await api.get<Item[]>('/items');
@@ -50,7 +57,7 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    if (user) fetchItems();
+    if (user?.household) fetchItems();
   }, [user, fetchItems]);
 
   // WebSocket
