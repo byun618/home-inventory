@@ -10,7 +10,7 @@ import styles from './page.module.css';
 export default function InviteAcceptPage() {
   const params = useParams();
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, refresh } = useAuth();
   const token = params.token as string;
 
   const [info, setInfo] = useState<InviteInfo | null>(null);
@@ -34,6 +34,7 @@ export default function InviteAcceptPage() {
     setAccepting(true);
     try {
       await api.post(`/invites/${token}/accept`);
+      await refresh();
       router.push('/');
     } catch (err) {
       if (err instanceof ApiError) {

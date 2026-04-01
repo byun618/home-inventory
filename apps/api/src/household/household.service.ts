@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ForbiddenException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/mysql';
 import { User, Household, HouseholdMember } from '../common/entities';
@@ -13,6 +14,11 @@ export class HouseholdService {
   constructor(private readonly em: EntityManager) {}
 
   async create(params: { user: User; name?: string }) {
+    const existing = await this.em.findOne(HouseholdMember, { user: params.user });
+    if (existing) {
+      throw new ConflictException('이미 Household에 소속되어 있어요');
+    }
+
     const household = this.em.create(Household, {
       name: params.name ?? '우리집',
       createdBy: params.user,
