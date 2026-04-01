@@ -73,7 +73,7 @@ pnpm db:reset           # 초기화 (drop + create)
 pnpm docker:up          # 빌드 + 기동
 pnpm docker:down        # 종료
 pnpm docker:logs        # 로그
-pnpm deploy             # git pull + docker:up
+pnpm docker:deploy      # git pull + docker:up
 ```
 
 ## 환경변수
