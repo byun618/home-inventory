@@ -23,8 +23,8 @@ async function request<T>(
     }
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    window.location.href = '/login';
-    throw new Error('Unauthorized');
+    // 초대 페이지 등 비인증 페이지에서는 리다이렉트하지 않고 토큰만 삭제 후 재시도
+    return request<T>(path, options);
   }
 
   if (!res.ok) {
