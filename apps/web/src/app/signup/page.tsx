@@ -1,13 +1,23 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useState, FormEvent } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { ApiError } from '@/lib/api';
 import styles from '../login/page.module.css';
 
 export default function SignupPage() {
+  return (
+    <Suspense>
+      <SignupForm />
+    </Suspense>
+  );
+}
+
+function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
   const { signup } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -38,7 +48,7 @@ export default function SignupPage() {
     setLoading(true);
     try {
       await signup(name, email, password);
-      router.push('/');
+      router.push(redirect || '/');
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
